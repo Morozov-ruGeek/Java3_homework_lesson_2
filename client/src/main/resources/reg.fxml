@@ -14,7 +14,6 @@
     <TextField fx:id="nicknameField" HBox.hgrow="ALWAYS" promptText="nickname"/>
     <TextArea fx:id="textArea" editable="false"/>
 
-
     <Button text="Registration" onAction="#tryToReg"/>
 
 
