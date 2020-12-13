@@ -101,7 +101,6 @@ public class ClientHandler {
                                     sendMsg("Не удалось изменить ник. Ник " + token[1] + " уже существует");
                                 }
                             }
-
                         } else {
                             server.broadcastMsg(this, str);
                         }

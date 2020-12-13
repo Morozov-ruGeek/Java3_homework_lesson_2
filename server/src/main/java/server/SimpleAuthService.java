@@ -11,7 +11,6 @@ public class SimpleAuthService implements AuthService {
 
     //подключение к SQlite
     public static boolean connect() {
-
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:main.db");
