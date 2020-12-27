@@ -6,8 +6,12 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
+
     private ServerSocket server;
     private Socket socket;
     private final int PORT = 8189;
@@ -18,6 +22,7 @@ public class Server {
         clients = new CopyOnWriteArrayList<>();
 
         if (!SimpleAuthService.connect()) {
+            logger.log(Level.SEVERE, "Не удалось подключиться к БД");
             throw new RuntimeException("Не удалось подключиться к БД");
         }
         authService = new SimpleAuthService();
@@ -28,12 +33,14 @@ public class Server {
 
             while (true) {
                 socket = server.accept();
-                System.out.println("client connected " + socket.getRemoteSocketAddress());
+//                System.out.println("client connected " + socket.getRemoteSocketAddress());
+                logger.info("client connected " + socket.getRemoteSocketAddress());
                 new ClientHandler(this, socket);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "IOException", e);
         } finally {
             SimpleAuthService.disconnect();
             System.out.println("server closed");

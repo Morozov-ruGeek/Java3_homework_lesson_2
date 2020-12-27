@@ -16,12 +16,12 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import server.SimpleAuthService;
@@ -54,6 +54,7 @@ public class Controller implements Initializable {
     private Stage stage;
     private Stage regStage;
     private RegController regController;
+    private String login;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -65,6 +66,7 @@ public class Controller implements Initializable {
         clientList.setVisible(authenticated);
         if (!authenticated) {
             nickname = "";
+            History.stop();
         }
         setTitle(nickname);
         textArea.clear();
@@ -113,6 +115,9 @@ public class Controller implements Initializable {
                             if (str.startsWith("/authok ")) {
                                 nickname = str.split("\\s")[1];
                                 setAuthenticated(true);
+                                textArea.appendText(History.getLast100LinesOfHistory(login));
+                                History.start(login);
+//                                loadHistory();
                                 break;
                             }
 
@@ -147,6 +152,8 @@ public class Controller implements Initializable {
                             }
                         } else {
                             textArea.appendText(str + "\n");
+                            History.writeLine(str);
+//                            saveHistory();
                         }
                     }
                 } catch (RuntimeException e) {
@@ -183,6 +190,8 @@ public class Controller implements Initializable {
         if (socket == null || socket.isClosed()) {
             connect();
         }
+
+        login = loginField.getText().trim();
 
         String msg = String.format("/auth %s %s", loginField.getText().trim(), passwordField.getText().trim());
         try {
