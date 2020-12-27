@@ -5,9 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.logging.Logger;
 
 
 public class ClientHandler {
+
+    private static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
+
     private Server server;
     private Socket socket;
     private DataInputStream in;
@@ -53,6 +57,7 @@ public class ClientHandler {
                                         out.writeUTF("/authok " + nickname);
                                         server.subscribe(this);
                                         socket.setSoTimeout(0);
+                                        logger.info("Client authenticated");
                                         break;
                                     } else {
                                         out.writeUTF("Учетная запись уже используется");
@@ -101,7 +106,6 @@ public class ClientHandler {
                                     sendMsg("Не удалось изменить ник. Ник " + token[1] + " уже существует");
                                 }
                             }
-
                         } else {
                             server.broadcastMsg(this, str);
                         }
@@ -111,7 +115,8 @@ public class ClientHandler {
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
-                    System.out.println("Client disconnected!");
+//                    System.out.println("Client disconnected!");
+                    logger.info("Client disconnected!");
                     server.unsubscribe(this);
                     try {
                         socket.close();

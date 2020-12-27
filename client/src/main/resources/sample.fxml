@@ -20,7 +20,6 @@
                   onMouseReleased="#clickClientlist"/>
     </HBox>
 
-
     <HBox fx:id="msgPanel" visible="false" managed="false">
         <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="input text" onAction="#sendMsg"/>
         <Button text="Send" onAction="#sendMsg"/>
